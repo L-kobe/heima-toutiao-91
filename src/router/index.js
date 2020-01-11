@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-const Layout = () => import('@/views/layout')
+const Layout = () => import('@/views/layout') // 布局组件
 const Home = () => import('@/views/home') // 主页组件
 const Question = () => import('@/views/question') // 问答组件
 const Video = () => import('@/views/video') // 视频组件
-const User = () => import('@/views/user') // 个人中心组件
-const Profile = () => import('@/views/user/profile') // 编辑资料组件
-const Chat = () => import('@/views/user/chat') // 小智同学组件
+const User = () => import('@/views/user') // 个人中心
+const Profile = () => import('@/views/user/profile') // 编辑资料
+const Chat = () => import('@/views/user/chat') // 小智同学
 const Login = () => import('@/views/login') // 登录组件
 const Article = () => import('@/views/article') // 文章详情
-const Search = () => import('@/views/search') // 搜索中心组件
-const SearchResult = () => import('@/views/search/result') // 搜索结果组件
+const Search = () => import('@/views/search') // 搜索中心
+const SearchResult = () => import('@/views/search/result') // 搜索结果
 
 Vue.use(VueRouter)
 
