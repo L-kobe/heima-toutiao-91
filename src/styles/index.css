@@ -33,3 +33,6 @@ ul {
 .van-nav-bar__text:active {
   background: transparent;
 }
+.spa {
+  height: 20px;
+}
