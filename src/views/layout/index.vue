@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-nav-bar v-if="$route.path !=='/user'" fixed title="黑马头条" right-text="搜索"></van-nav-bar>
+    <van-nav-bar @click-right="$router.push('/search')" v-if="$route.path !=='/user'" fixed title="黑马头条" right-text="搜索"></van-nav-bar>
     <!-- 二级路由容器  首页 /  问答 / 视频 / 我的-->
     <div class="my-wrapper" :class="{noTop:!showBar}">
       <router-view></router-view>
