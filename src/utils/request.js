@@ -1,7 +1,7 @@
 import axios from 'axios' // 引入axios插件
 import JSONBig from 'json-bigint' // 处理大数字插件
 import store from '@/store' // 引入vuex中的store实例
-import router from 'router'
+import router from '@/router'
 // 创建一个新的 插件实例
 // 应该给request请求 一个默认的请求头  baseURL
 const instance = axios.create({

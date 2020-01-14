@@ -21,6 +21,8 @@
   </div>
 </template>
 <script>
+import { login } from '@/api/user'
+import { mapMutations } from 'vuex'
 export default {
   name: 'login',
   data () {
@@ -61,11 +63,17 @@ export default {
       this.errMsg.code = ''
       return true
     },
-    login () {
+
+    async login () {
       if (this.checkMobile() && this.checkCode()) {
-        console.log('校验成功')
+        const data = await login(this.loginForm)
+        this.updateUser({ user: data })
+        this.$gnotify({ type: 'success', message: '登录成功' })
+        let{ redirectUrl } = this.$route.query
+        this.$router.push(redirectUrl || '/')
       }
-    }
+    },
+    ...mapMutations(['updateUser'])
   }
 }
 </script>
