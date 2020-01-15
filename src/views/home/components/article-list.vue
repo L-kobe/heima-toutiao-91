@@ -40,7 +40,15 @@ export default {
       finished: false,
       articles: [],
       refreshSuccessText: '更新成功', // 文本
-      downLoading: false
+      downLoading: false,
+      timestamp: null
+    }
+  },
+  props: {
+    channel_id: {
+      type: Number,
+      default: null,
+      required: true
     }
   },
   methods: {
