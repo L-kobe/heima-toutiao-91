@@ -1,7 +1,7 @@
 <template>
   <div class="scroll-wrapper">
     <van-list v-model="upLoading" @load="onLoad" :finished="finished" finished-text="没有更多了">
-        <van-cell v-for="article in articles" :key="article">{{article}}</van-cell>
+      <van-cell v-for="article in articles" :key="article" :title="article"></van-cell>
     </van-list>
   </div>
 </template>
@@ -18,15 +18,18 @@ export default {
   },
   methods: {
     onLoad () {
-      if (this.articles.length < 50) {
-        setTimeout(() => {
-          this.articles = [...this.articles, ...Array.from(Array(10), (value, index) =>
-            index + 1 + this.articles.length)]
+      setTimeout(() => {
+        if (this.articles.length === 50) {
+          this.finished = true
+        } else {
+          let arr = Array.from(
+            Array(10),
+            (value, index) => index + this.articles.length + 1
+          )
+          this.articles.push(...arr)
           this.upLoading = false
-        }, 2000)
-      } else {
-        this.finished = true
-      }
+        }
+      }, 1000)
     }
   }
 }
