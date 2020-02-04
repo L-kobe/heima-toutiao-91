@@ -10,7 +10,7 @@
     </span>
     <!-- 放置弹层组件 -->
     <van-popup :style="{ width: '80%' }" v-model="showMoreAction">
-      <more-action ></more-action>
+       <more-action @dislike="dislike"></more-action>
     </van-popup>
   </div>
 </template>
@@ -19,6 +19,8 @@
 import ArticleList from './components/article-list'
 import { getMyChannels } from '@/api/channels'
 import MoreAction from './components/more-action'
+import { disLikeArticle } from '@/api/article'
+import eventBus from '@/utils/eventBus'
 export default {
   name: 'home',
   data () {
@@ -40,6 +42,23 @@ export default {
     openMoreAction (artId) {
       this.showMoreAction = true
       this.articleId = artId
+    },
+    async dislike () {
+      try {
+        if (this.articleId) {
+          await disLikeArticle({
+            target: this.articleId
+          })
+          this.$gnotify({
+            type: 'success', message: '操作成功'
+          })
+          // 触发一个时间 发出一个广播  听到广播的文章列表 去删除对应的数据
+          eventBus.$emit('delArticle', this.articleId, this.channels[this.activeIndex].id)
+          this.showMoreAction = false
+        }
+      } catch (error) {
+        this.$gnotify({ type: 'danger', message: '操作失败' })
+      }
     }
   },
   created () {

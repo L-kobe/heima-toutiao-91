@@ -8,3 +8,10 @@ export function getArticles (params) {
     params: { with_top: 1, ...params }
   })
 }
+export function disLikeArticle (data) {
+  return request({
+    url: '/article/dislikes',
+    method: 'post',
+    data
+  })
+}
