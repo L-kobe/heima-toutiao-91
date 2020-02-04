@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { getArticles } from '@/api/article'
 export default {
   name: 'article-list',
   data () {
@@ -52,19 +53,30 @@ export default {
     }
   },
   methods: {
-    onLoad () {
-      setTimeout(() => {
-        if (this.articles.length === 50) {
-          this.finished = true
-        } else {
-          let arr = Array.from(
-            Array(10),
-            (value, index) => index + this.articles.length + 1
-          )
-          this.articles.push(...arr)
-          this.upLoading = false
-        }
-      }, 1000)
+    // 上拉加载方法
+    async onLoad () {
+      // setTimeout(() => {
+      //   if (this.articles.length === 50) {
+      //     this.finished = true
+      //   } else {
+      //     let arr = Array.from(
+      //       Array(10),
+      //       (value, index) => index + this.articles.length + 1
+      //     )
+      //     this.articles.push(...arr)
+      //     this.upLoading = false
+      //   }
+      // }, 1000)
+      const data = await getArticles({
+        channel_id: this.channel_id, timestamp: this.timestamp || Date.now()
+      })
+      this.articles.push(...data.results)
+      this.upLoading = false
+      if (data.pre_timestamp) {
+        this.timestamp = data.pre_timestamp
+      } else {
+        this.finished = true
+      }
     },
     onRefresh () {
       // 触发下拉刷新
