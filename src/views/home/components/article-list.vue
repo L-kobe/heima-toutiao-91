@@ -2,24 +2,24 @@
   <div class="scroll-wrapper">
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="refreshSuccessText">
       <van-list v-model="upLoading" @load="onLoad" :finished="finished" finished-text="没有更多了">
-        <van-cell v-for="article in articles" :key="article">
+        <van-cell v-for="article in articles" :key="article.art_id.toString()">
           <div class="article_item">
-            <h3 class="van-ellipsis">PullRefresh下拉刷新PullRefresh下拉刷新下拉刷新下拉刷新</h3>
+            <h3 class="van-ellipsis">{{article.title}}</h3>
 
             <!-- 三图模式 -->
-            <div class="img_box">
-              <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-              <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-              <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+            <div class="img_box" v-if="article.cover.type === 3">
+              <van-image class="w33" fit="cover" src="article.cover.images[0]" />
+              <van-image class="w33" fit="cover" src="article.cover.images[1]" />
+              <van-image class="w33" fit="cover" src="article.cover.images[2]" />
             </div>
             <!-- 单图模式 -->
-            <div class="img_box">
-              <van-image class="w100" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+            <div class="img_box" v-else-if="article.cover.type === 1">
+              <van-image class="w100" fit="cover" :src="article.cover.images[0]"/>
             </div>
             <div class="info_box">
-              <span>你像一阵风</span>
-              <span>8评论</span>
-              <span>10分钟前</span>
+              <span>{{article.aut_name}}</span>
+              <span>{{article.comm_count}}</span>
+              <span>{{article.pubdate}}</span>
               <span class="close">
                 <van-icon name="cross"></van-icon>
               </span>
@@ -68,7 +68,8 @@ export default {
       //   }
       // }, 1000)
       const data = await getArticles({
-        channel_id: this.channel_id, timestamp: this.timestamp || Date.now()
+        channel_id: this.channel_id,
+        timestamp: this.timestamp || Date.now()
       })
       this.articles.push(...data.results)
       this.upLoading = false
