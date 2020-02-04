@@ -55,6 +55,7 @@ export default {
   methods: {
     // 上拉加载方法
     async onLoad () {
+      await this.$sleep()
       // setTimeout(() => {
       //   if (this.articles.length === 50) {
       //     this.finished = true
@@ -80,6 +81,7 @@ export default {
       }
     },
     async onRefresh () {
+      await this.$sleep()
       // 触发下拉刷新
       // setTimeout(() => {
       //   let arr = Array.from(Array(10), (value, index) => '追加' + (index + 1))
