@@ -20,7 +20,7 @@
               <span>{{article.aut_name}}</span>
               <span>{{article.comm_count}}</span>
               <span>{{article.pubdate | relTime}}</span>
-              <span class="close">
+              <span class="close" v-if="user.token" @click="$emit('showMoreAction',article.art_id.toString())">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>
@@ -33,6 +33,8 @@
 
 <script>
 import { getArticles } from '@/api/article'
+import { mapState } from 'vuex'
+
 export default {
   name: 'article-list',
   data () {
@@ -51,6 +53,9 @@ export default {
       default: null,
       required: true
     }
+  },
+  computed: {
+    ...mapState(['user'])
   },
   methods: {
     // 上拉加载方法

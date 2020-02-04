@@ -2,33 +2,44 @@
   <div class="container">
     <van-tabs v-model="activeIndex" swipeable>
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
-        <article-list :channel_id ="channel.id" ></article-list>
+        <article-list @showMoreAction="openMoreAction" :channel_id ="channel.id" ></article-list>
       </van-tab>
     </van-tabs>
     <span class="bar_btn">
       <van-icon name="wap-nav" />
     </span>
+    <!-- 放置弹层组件 -->
+    <van-popup :style="{ width: '80%' }" v-model="showMoreAction">
+      <more-action ></more-action>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import ArticleList from './components/article-list'
 import { getMyChannels } from '@/api/channels'
+import MoreAction from './components/more-action'
 export default {
   name: 'home',
   data () {
     return {
       activeIndex: 0,
-      channels: []
+      channels: [],
+      showMoreAction: false,
+      articleId: null
     }
   },
   components: {
-    ArticleList
+    ArticleList, MoreAction
   },
   methods: {
     async getMyChannels () {
       let data = await getMyChannels()
       this.channels = data.channels // 更新原来的channels
+    },
+    openMoreAction (artId) {
+      this.showMoreAction = true
+      this.articleId = artId
     }
   },
   created () {
