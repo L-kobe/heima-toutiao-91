@@ -8,13 +8,13 @@
 
             <!-- 三图模式 -->
             <div class="img_box" v-if="article.cover.type === 3">
-              <van-image class="w33" fit="cover" src="article.cover.images[0]" />
-              <van-image class="w33" fit="cover" src="article.cover.images[1]" />
-              <van-image class="w33" fit="cover" src="article.cover.images[2]" />
+              <van-image lazy-load class="w33" fit="cover" :src="article.cover.images[0]" />
+              <van-image lazy-load class="w33" fit="cover" :src="article.cover.images[1]" />
+              <van-image lazy-load class="w33" fit="cover" :src="article.cover.images[2]" />
             </div>
             <!-- 单图模式 -->
             <div class="img_box" v-else-if="article.cover.type === 1">
-              <van-image class="w100" fit="cover" :src="article.cover.images[0]"/>
+              <van-image lazy-load class="w100" fit="cover" :src="article.cover.images[0]" />
             </div>
             <div class="info_box">
               <span>{{article.aut_name}}</span>
@@ -89,7 +89,10 @@ export default {
       //   this.downLoading = false // 关掉了下拉状态
       //   this.refreshSuccessText = `更新了${arr.length}条数据`
       // }, 1000)
-      const data = await getArticles({ channel_id: this.channel_id, timestamp: Date.now() })
+      const data = await getArticles({
+        channel_id: this.channel_id,
+        timestamp: Date.now()
+      })
       this.downLoading = false
       if (data.results.length) {
         this.articles = data.results
