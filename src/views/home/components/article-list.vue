@@ -40,7 +40,7 @@ export default {
       upLoading: false,
       finished: false,
       articles: [],
-      refreshSuccessText: '更新成功', // 文本
+      refreshSuccessText: '', // 文本
       downLoading: false,
       timestamp: null
     }
@@ -79,14 +79,24 @@ export default {
         this.finished = true
       }
     },
-    onRefresh () {
+    async onRefresh () {
       // 触发下拉刷新
-      setTimeout(() => {
-        let arr = Array.from(Array(10), (value, index) => '追加' + (index + 1))
-        this.articles.unshift(...arr) // 将数据添加到队首
-        this.downLoading = false // 关掉了下拉状态
-        this.refreshSuccessText = `更新了${arr.length}条数据`
-      }, 1000)
+      // setTimeout(() => {
+      //   let arr = Array.from(Array(10), (value, index) => '追加' + (index + 1))
+      //   this.articles.unshift(...arr) // 将数据添加到队首
+      //   this.downLoading = false // 关掉了下拉状态
+      //   this.refreshSuccessText = `更新了${arr.length}条数据`
+      // }, 1000)
+      const data = await getArticles({ channel_id: this.channel_id, timestamp: Date.now() })
+      this.downLoading = false
+      if (data.results.length) {
+        this.articles = data.results
+        this.finished = false
+        this.timestamp = data.pre_timestamp
+        this.refreshSuccessText = `更新了${data.results.length}条数据`
+      } else {
+        this.refreshSuccessText = '已经是最新数据'
+      }
     }
   }
 }
