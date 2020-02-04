@@ -19,7 +19,7 @@
             <div class="info_box">
               <span>{{article.aut_name}}</span>
               <span>{{article.comm_count}}</span>
-              <span>{{article.pubdate}}</span>
+              <span>{{article.pubdate | relTime}}</span>
               <span class="close">
                 <van-icon name="cross"></van-icon>
               </span>
