@@ -15,3 +15,10 @@ export function disLikeArticle (data) {
     data
   })
 }
+export function reportArticle (data) {
+  return request({
+    url: '/article/reports',
+    data,
+    method: 'post'
+  })
+}
