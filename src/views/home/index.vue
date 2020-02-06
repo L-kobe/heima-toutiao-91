@@ -14,7 +14,7 @@
     </van-popup>
     <!-- 编辑频道 -->
     <van-action-sheet :round="false" title="编辑频道" v-model="showChannelEdit">
-      <channel-edit @selectChannel="selectChannel" :channels="channels"></channel-edit>
+      <channel-edit :activeIndex = "activeIndex" @selectChannel="selectChannel" :channels="channels"></channel-edit>
     </van-action-sheet>
   </div>
 </template>
