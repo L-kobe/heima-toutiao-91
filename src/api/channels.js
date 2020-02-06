@@ -29,9 +29,26 @@ export function getMyChannels () {
     }
   })
 }
-
+// 获取所有频道
 export function getAllChannels () {
   return request({
     url: '/channels'
+  })
+}
+
+// 删除频道
+export function delChannel (id) {
+  return new Promise(function (resolve, reject) {
+    // 首先也需要做出判断 是删除 游客得频道还是删除登录得频道
+    let key = store.state.user.token ? CACHE_CHANNEL_U : CACHE_CHANNEL_T
+    let channels = JSON.parse(localStorage.getItem(key))// 得到缓存结果 缓存中一定是有数据的
+    let index = channels.findIndex(item => item.id === id)// 找到对应频道的索引
+    if (index > -1) {
+      channels.splice(index, 1)
+      localStorage.setItem(key, JSON.stringify(channels))// 重新写入缓存
+      resolve()
+    } else {
+      reject(new Error('找不到对应的频道'))
+    }
   })
 }
