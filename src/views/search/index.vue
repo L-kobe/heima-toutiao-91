@@ -5,9 +5,9 @@
     <!-- 导航 -->
     <van-search @search = "onSearch" v-model.trim="q" placeholder="请输入搜索关键词" shape="round" />
     <van-cell-group class="suggest-box" v-if="q">
-      <van-cell @click="toSearchResult(item)" icon="search" v-for="item in suggestion" :key="item">
-        {{item}}
-      </van-cell>
+      <van-cell @click="toSearchResult(item)" icon="search" v-for="item in suggestList" :key="item">
+        {{ item }}
+  </van-cell>
     </van-cell-group>
     <div class="history-box" v-else-if="historyList.length">
       <div class="head">
@@ -15,7 +15,7 @@
         <van-icon name="delete" @click="clear"></van-icon>
       </div>
       <van-cell-group>
-        <van-cell @click="toResult(text)" v-for="(item,index) in historyList" :key="index">
+        <van-cell @click="toResult(item)" v-for="(item,index) in historyList" :key="index">
           <a class="word_btn">{{item}}</a>
           <van-icon @click.stop="delHistory(index)" class="close_btn" slot="right-icon" name="cross" />
         </van-cell>
@@ -53,11 +53,11 @@ export default {
         this.timer = setTimeout(async () => {
           this.timer = null
           if (!this.q) {
-            this.suggestion = []
+            this.suggestList = []
             return false
           }
           let data = await suggestion({ q: this.q })
-          this.suggestion = data.options
+          this.suggestList = data.options
         }, 500)
       }
     }
@@ -75,15 +75,14 @@ export default {
       // 也应该去搜索结果页面  而且 也要携带参数
       this.$router.push({ path: '/search/result', query: { q: this.q } })
     },
-    // 点击联想搜索关键词 去跳转=>先把点击的关键词放入历史记录 表示我搜索过
+    // 点击联想搜索关键词 去跳转 => 先把点击的关键词放入历史记录 表示我搜索过
     toSearchResult (text) {
       // 放入历史记录
-      let obj = new Set(this.historyList)// 生成一个set变量  set对象自动去重
+      let obj = new Set(this.historyList) // 生成一个set变量  set对象自动去重
       obj.add(text)
       this.historyList = Array.from(obj) // 将set转回数组
-      localStorage.setItem(key, JSON.stringify(this.historyList))
-      // 重新写入缓存
-      this.$router.push({ path: '/search/result', query: { q: text } })
+      localStorage.setItem(key, JSON.stringify(this.historyList)) // 重新写入缓存
+      this.$router.push({ path: '/search/result', query: { q: text } }) // 直接跳转到搜索结果界面
     },
     // 清空所有历史
     clear () {
