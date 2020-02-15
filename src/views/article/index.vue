@@ -22,6 +22,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <van-button round size="small" :class="{active:article.attitude===0}" plain icon="delete">不喜欢</van-button>
       </div>
+      <comment></comment>
     </div>
   </div>
 </template>
@@ -29,12 +30,16 @@
 <script>
 import { getArticleInfo } from '@/api/article'
 import { followUser, unFollowUser } from '@/api/user'
+import Comment from './components/comment'
 export default {
   name: 'articles',
   data () {
     return {
       article: {} // 接收文章数据
     }
+  },
+  components: {
+    Comment
   },
   methods: {
     async follow () {
@@ -89,6 +94,7 @@ export default {
     position:sticky;
     background-color: #fff;
     top:46px;
+    z-index: 2;
     .text {
       flex: 1;
       padding-left: 10px;
