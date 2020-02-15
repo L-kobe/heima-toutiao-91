@@ -2,10 +2,10 @@
   <div class="scroll-wrapper">
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="refreshSuccessText">
       <van-list v-model="upLoading" @load="onLoad" :finished="finished" finished-text="没有更多了">
-        <van-cell v-for="article in articles" :key="article.art_id.toString()">
+        <!-- 点击van-cell 跳转到文章详情 -->
+        <van-cell :to="`/article?articleId=${article.art_id.toString()}`" v-for="article in articles" :key="article.art_id.toString()">
           <div class="article_item">
             <h3 class="van-ellipsis">{{article.title}}</h3>
-
             <!-- 三图模式 -->
             <div class="img_box" v-if="article.cover.type === 3">
               <van-image lazy-load class="w33" fit="cover" :src="article.cover.images[0]" />
@@ -20,7 +20,7 @@
               <span>{{article.aut_name}}</span>
               <span>{{article.comm_count}}</span>
               <span>{{article.pubdate | relTime}}</span>
-              <span class="close" v-if="user.token" @click="$emit('showMoreAction',article.art_id.toString())">
+              <span class="close" v-if="user.token" @click.stop="$emit('showMoreAction',article.art_id.toString())">
                 <van-icon name="cross"></van-icon>
               </span>
             </div>
@@ -35,6 +35,7 @@
 import { getArticles } from '@/api/article'
 import { mapState } from 'vuex'
 import eventBus from '@/utils/eventBus'
+
 export default {
   name: 'article-list',
   data () {
