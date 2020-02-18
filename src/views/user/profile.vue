@@ -26,7 +26,7 @@
     <van-popup v-model="showPhoto" style="width:80%">
       <!-- 1.选择本地图片
       2.拍照 -->
-      <van-cell is-link title="本地相册选择图片"></van-cell>
+      <van-cell @click="openChangeFile" is-link title="本地相册选择图片"></van-cell>
       <van-cell is-link title="拍照"></van-cell>
     </van-popup>
 
@@ -51,12 +51,13 @@
         @confirm = "confirmDate"
       ></van-datetime-picker>
     </van-popup>
+    <input ref="myFile" @change="upload()" type="file" style="display:none">
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-import { getUserProfile } from '@/api/user'
+import { getUserProfile, updateImg } from '@/api/user'
 export default {
   name: 'profile',
   data () {
@@ -106,6 +107,18 @@ export default {
       // console.log(data)
       // 将数据赋值给user
       this.user = data
+    },
+    // 点击选择图片触发
+    openChangeFile () {
+      this.$refs.myFile.click()
+    },
+    async upload () {
+      // console.log('选择了图片')
+      let data = new FormData()
+      data.append('photo', this.$refs.myFile.files[0])
+      let result = await updateImg(data)
+      this.user.photo = result.photo
+      this.showPhoto = false
     }
   },
   created () {
