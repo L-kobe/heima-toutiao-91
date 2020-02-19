@@ -2,14 +2,17 @@
     <div class="container">
     <van-nav-bar fixed left-arrow @click-left="$router.back()" title="小智同学"></van-nav-bar>
     <div class="chat-list">
-      <div class="chat-item left">
-        <van-image fit="cover" round :src="XZImg" />
-        <div class="chat-pao">ewqewq</div>
+      <div :class="{left:item.name==='xz',right:item.name!='xz'}" class="chat-item" v-for="(item,index) in list" :key="index">
+        <!-- 小智同学的图片 -->
+        <van-image v-if="item.name==='xz'" fit="cover" round :src="XZImg" />
+        <div class="chat-pao">{{item.msg}}</div>
+        <!-- 右边再放置一个图片 -->
+        <van-image v-if="item.name!=='xz'"  fit="cover" round :src="photo" />
       </div>
-      <div class="chat-item right">
+      <!-- <div class="chat-item right">
         <div class="chat-pao">ewqewq</div>
-        <van-image  fit="cover" round :src="photo" />
-      </div>
+
+      </div> -->
     </div>
     <div class="reply-container van-hairline--top">
       <van-field v-model="value" placeholder="说点什么...">
@@ -23,12 +26,14 @@
 <script>
 import XZImg from '@/assets/images/xz.png'
 import { mapState } from 'vuex'
+import io from 'socket.io-client'
 export default {
   data () {
     return {
       value: '',
       loading: false,
-      XZImg
+      XZImg,
+      list: []
     }
   },
   methods: {
@@ -37,7 +42,22 @@ export default {
     }
   },
   computed: {
-    ...mapState(['photo'])
+    ...mapState(['photo', 'user'])
+  },
+  created () {
+    // 建立和websocket和服务器的连接
+    this.socket = io('http://ttapi.research.itcast.cn', {
+      query: {
+        token: this.user.token
+      }
+    })
+    this.socket.on('connect', () => {
+      console.log('和服务器建立连接')
+      this.list.push({ msg: '你好', name: 'xz' })
+    })
+    this.socket.on('message', (data) => {
+      this.list.push({ ...data, name: 'xz' })
+    })
   }
 }
 </script>
