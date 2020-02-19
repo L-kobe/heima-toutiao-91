@@ -1,7 +1,7 @@
 <template>
     <div class="container">
     <van-nav-bar fixed left-arrow @click-left="$router.back()" title="小智同学"></van-nav-bar>
-    <div class="chat-list">
+    <div class="chat-list" ref="myList">
       <div :class="{left:item.name==='xz',right:item.name!='xz'}" class="chat-item" v-for="(item,index) in list" :key="index">
         <!-- 小智同学的图片 -->
         <van-image v-if="item.name==='xz'" fit="cover" round :src="XZImg" />
@@ -15,9 +15,9 @@
       </div> -->
     </div>
     <div class="reply-container van-hairline--top">
-      <van-field v-model="value" placeholder="说点什么...">
+      <van-field v-model.trim="value" placeholder="说点什么...">
         <van-loading v-if="loading" slot="button" type="spinner" size="16px"></van-loading>
-        <span v-else @click="send()" slot="button" style="font-size:12px;color:#999">提交</span>
+        <span v-else @click="send()" slot="button" style="font-size:12px;color:#999">go</span>
       </van-field>
     </div>
   </div>
@@ -30,15 +30,32 @@ import io from 'socket.io-client'
 export default {
   data () {
     return {
-      value: '',
+      value: '', // 用来绑定用户的谈话内容
       loading: false,
       XZImg,
       list: []
     }
   },
   methods: {
-    send () {
-
+    scrollBottom () {
+      this.$nextTick(() => {
+        this.$refs.myList.scrollTop = this.$refs.myList.scrollHeight
+      })
+    },
+    async send () {
+      if (!this.value) return false
+      this.loading = true
+      await this.$sleep()
+      let obj = {
+        // name: 'self',
+        msg: this.value,
+        timestamp: Date.now() }
+      this.socket.emit('message', obj)
+      this.list.push(obj)
+      this.value = ''
+      // console.log('1')
+      this.loading = false
+      this.scrollBottom()
     }
   },
   computed: {
@@ -57,7 +74,12 @@ export default {
     })
     this.socket.on('message', (data) => {
       this.list.push({ ...data, name: 'xz' })
+      this.scrollBottom()
     })
+  },
+  // 页面销毁之前的钩子函数
+  beforeDestroy () {
+    this.socket.close()
   }
 }
 </script>
