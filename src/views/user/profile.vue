@@ -58,6 +58,7 @@
 <script>
 import dayjs from 'dayjs'
 import { getUserProfile, updateImg, saveUserInfo } from '@/api/user'
+import { mapMutations } from 'vuex'
 export default {
   name: 'profile',
   data () {
@@ -79,6 +80,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updatePhoto']),
     btnName () {
       if (this.user.name.length < 1 || this.user.name.length > 7) {
         this.nameMsg = '你的用户昵称不符合1-7的长度要求'
@@ -104,6 +106,7 @@ export default {
     // 获取用户资料的方法
     async getUserProfile () {
       let data = await getUserProfile()
+      this.updatePhoto({ photo: data.photo })
       // console.log(data)
       // 将数据赋值给user
       this.user = data
@@ -119,6 +122,9 @@ export default {
       let result = await updateImg(data)
       this.user.photo = result.photo
       this.showPhoto = false
+      this.updatePhoto({
+        photo: result.photo
+      })
     },
     // 保存方法
     async saveUserInfo () {

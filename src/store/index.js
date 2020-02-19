@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   // 放置数据的地方  初始化的时候直接将用户信息给我们的公共状态
   state: {
-    user: auth.getUser() // 从缓存中
+    user: auth.getUser(), // 从缓存中
+    photo: null
   },
   // state数据修改必须通过谁
   // payload 载荷中携带 user
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     clearUser (state) {
       state.user = {}
       auth.delUser() // 将缓存中的数据也清空
+    },
+    updatePhoto (state, payload) {
+      state.photo = payload.photo
     }
   },
   actions: {
