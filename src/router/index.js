@@ -20,7 +20,13 @@ const routes = [
     name: 'home',
     component: Layout, // 一级路由 布局组件layout
     children: [ // 二级路由
-      { path: '/', component: Home }, // 二级路由  首页组件
+      { path: '/',
+        component: Home,
+        meta: {
+          isAlive: true
+        }
+
+      }, // 二级路由  首页组件
       { path: '/question', component: Question }, // 二级路由   问答组件
       { path: '/video', component: Video }, // 二级路由
       { path: '/user', component: User } // 二级路由
