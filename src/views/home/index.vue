@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-tabs v-model="activeIndex" swipeable>
+    <van-tabs v-model="activeIndex" swipeable @change="changeTab">
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
         <article-list @showMoreAction="openMoreAction" :channel_id="channel.id"></article-list>
       </van-tab>
@@ -43,6 +43,9 @@ export default {
     ChannelEdit
   },
   methods: {
+    changeTab () {
+      eventBus.$emit('changTab', this.channels[this.activeIndex].id)
+    },
     async addChannel (channel) {
       await addChannel(channel)
       this.channels.push(channel)

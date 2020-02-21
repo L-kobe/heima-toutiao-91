@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-wrapper">
+  <div ref="myScroll" class="scroll-wrapper" @scroll="remember">
     <van-pull-refresh v-model="downLoading" @refresh="onRefresh" :success-text="refreshSuccessText">
       <van-list v-model="upLoading" @load="onLoad" :finished="finished" finished-text="没有更多了">
         <!-- 点击van-cell 跳转到文章详情 -->
@@ -45,7 +45,8 @@ export default {
       articles: [],
       refreshSuccessText: '', // 文本
       downLoading: false,
-      timestamp: null
+      timestamp: null,
+      scrollTop: 0
     }
   },
   props: {
@@ -70,8 +71,22 @@ export default {
         }
       }
     })
+    eventBus.$on('changeTab', id => {
+      // 判断一个id是否等于 改组件通过props得到频道的id
+      if (id === this.channel_id) {
+        this.$nextTick(() => {
+          if (this.scrollTop && this.$refs.myScroll) {
+            this.$refs.myScroll.scrollTop = this.scrollTop
+          }
+        })
+      }
+    })
   },
   methods: {
+    // 当绑定事件只写方法名时  第一个参数时event
+    remember (event) {
+      this.scrollTop = event.target.scrollTop
+    },
     // 上拉加载方法
     async onLoad () {
       await this.$sleep()
@@ -121,6 +136,12 @@ export default {
       } else {
         this.refreshSuccessText = '已经是最新数据'
       }
+    }
+  },
+  // 激活函数
+  activated () {
+    if (this.scrollTop && this.$refs.myScroll) {
+      this.$refs.myScroll.scrollTop = this.scrollTop
     }
   }
 }
